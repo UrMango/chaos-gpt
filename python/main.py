@@ -37,4 +37,4 @@ while text[-1].isalpha() or text[-1] == " " or text[-1] == "," or text[-1] == ":
     text = tokenizer.decode(outputs[0], skip_special_tokens=True)
 text = text[len(origin_sequence):]
 text.replace('"', "")
-print(PREFIX + text)
+print(text)
