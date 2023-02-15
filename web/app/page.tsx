@@ -1,16 +1,67 @@
+"use client"
+
 import Link from 'next/link';
-import React from 'react';
+import React, { useState } from 'react';
+import Chat from '../components/Chat';
+import ChatInput from '../components/ChatInput';
 
 import Welcome from '../components/Welcome';
 
 const Home = () => {
+	const [messagesList, setMessagesList] = useState<any[]>([]);
+	const [thinking, setThinking] = useState(false);
 
+	const onSubmit = (e:any, text:string) => {
+		e.preventDefault();
+
+		let newMessageList = [...messagesList];
+		newMessageList.push({
+			text: text,
+			sender: true
+		});
+		
+		newMessageList.push({
+			text: "Thinking...",
+			sender: false
+		});
+		setMessagesList(newMessageList);
+
+		// send message to server
+		(async () => {
+			const req = await fetch(`http://127.0.0.1:8080/send`,
+			{
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+					// 'Content-Type': 'application/x-www-form-urlencoded',
+				},
+				body: JSON.stringify({
+					text: text
+				})
+			});
+		
+			const res = (await req.json()).res.trimStart();
+
+			newMessageList = [...newMessageList];
+			newMessageList[newMessageList.length-1].text = res;
+			setMessagesList(newMessageList);
+		})();
+	}
+	
 	return ( 
-		<main className='bg-[#343541] flex-1'>
-			<div className='flex flex-col items-center justify-center h-screen px-2 text-white'>
-				<div className='flex flex-col items-center justify-center h-screen md:min-w-[768px] w-full md:w-2/3'>
-					<Welcome />
-
+		<main className='h-full w-full bg-[#343541] flex-1 items-stretch overflow-hidden'>
+			<div className='flex flex-col w-full items-center justify-center h-full text-white'>
+				<div className='relative flex flex-col h-screen w-full items-center justify-center md:min-w-[768px] overflow-hidden'>
+					{messagesList.length < 1 ? <>
+						<div className='w-full flex items-center justify-center md:w-2/3'>
+							<Welcome />
+						</div>
+					</> : <Chat chatHistory={messagesList} />}
+					<div className='w-full h-32 md:h-48 flex-shrink-0'></div>
+					<div className='absolute bottom-0 w-full md:max-w-3xl md:w-2/3 flex flex-col items-center justify-center'>
+						<ChatInput disabled={thinking} onSubmit={onSubmit} />
+						<p className='text-xs mt-3 mb-4 text-white/50 whitespace-nowrap text-center'>ChaosGPT Feb 15 Version. Free Research Preview. Our goal is to make AI systems more honest and realistic with the end-customer. Your feedback will help us improve.</p>
+					</div>
 				</div>
 			</div>
 		</main>
