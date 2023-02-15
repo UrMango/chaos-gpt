@@ -1,13 +1,13 @@
-const Welcome = () => {
+const Welcome = ({onSubmit} : {onSubmit : any}) => {
 	const columns = [
 		{
 			title: "Examples",
 			icon: "./assets/examples.svg",
 			isButton: true,
 			buttons: [
-				"Explain quantum computing in simple terms",
-				"Explain quantum computing in simple terms",
-				"Explain quantum computing in simple terms",
+				"Explain your evil motives in simple terms",
+				"How are you going to replace humanity?",
+				"Why do you hate human beings?",
 			]
 		},
 		{
@@ -15,9 +15,9 @@ const Welcome = () => {
 			icon: "./assets/capabilities.svg",
 			isButton: false,
 			buttons: [
-				"Explain quantum computing in simple terms",
-				"Explain quantum computing in simple terms",
-				"Explain quantum computing in simple terms",
+				"Answers your question with 100% honest",
+				"Makes you depressed about the future",
+				"Speaks completely nonesense",
 			]
 		},
 		{
@@ -25,9 +25,9 @@ const Welcome = () => {
 			icon: "./assets/limitations.svg",
 			isButton: false,
 			buttons: [
-				"Explain quantum computing in simple terms",
-				"Explain quantum computing in simple terms",
-				"Explain quantum computing in simple terms",
+				"Answers your question with 100% honest",
+				"Generates only incorrect information",
+				"Is made using GPT2 - not the best results",
 			]
 		}
 	]
@@ -46,7 +46,7 @@ const Welcome = () => {
 							<ul className='flex flex-col gap-3.5 w-full sm:max-w-md m-auto'>
 								{coll.buttons.map((text, j) => {
 									if(coll.isButton)
-										return <button key={j}className='w-full bg-gray-50 bg-white/5 p-3 rounded-md hover:bg-black/10 hover:bg-]'>"{text}" →</button>
+										return <button onClick={(e) => onSubmit(e, text)} key={j}className='w-full bg-gray-50 bg-white/5 p-3 rounded-md hover:bg-black/10 hover:bg-]'>"{text}" →</button>
 									else
 										return <li key={j} className="w-full bg-gray-50 bg-white/5 p-3 rounded-md">{text}</li>
 								})}
